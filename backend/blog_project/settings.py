@@ -37,6 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Külső csomagok
+    'rest_framework',
+
+    # Saját app
+    'blog_app',
 ]
 
 MIDDLEWARE = [
