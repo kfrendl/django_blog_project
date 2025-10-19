@@ -20,6 +20,13 @@ backend/__pycache__/
 backend/*.pyc
 backend/*.pyo
 
+# Ignore all migrations except __init__.py and 0001_initial.py
+backend/blog_app/migrations/*.py
+!backend/blog_app/migrations/__init__.py
+!backend/blog_app/migrations/0001_initial.py
+
+*.db
+
 # =============================
 # IDE / Editor
 # =============================
