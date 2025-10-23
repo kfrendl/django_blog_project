@@ -133,3 +133,16 @@ AUTH_USER_MODEL = 'blog_app.CustomUser'
 INSTALLED_APPS += ['corsheaders']
 MIDDLEWARE = ['corsheaders.middleware.CorsMiddleware'] + MIDDLEWARE
 CORS_ALLOW_ALL_ORIGINS = True  # fejlesztéshez
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': [
+      'rest_framework.permissions.AllowAny',
+    ],
+}
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000"
+]

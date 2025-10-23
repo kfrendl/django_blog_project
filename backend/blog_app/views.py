@@ -8,13 +8,16 @@ from .serializers import PostSerializer, CommentSerializer
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]  # <--- bárki küldhet kérést (fejlesztéshez)
 
     def perform_create(self, serializer):
-        # A bejelentkezett felhasználót állítja be a post.user mezőnek
-        serializer.save(user=self.request.user)
+        # Ideiglenesen hozzárendelünk egy usert, pl. az első usert az adatbázisból
+        from .models import CustomUser
+        user = CustomUser.objects.first()  # csak teszteléshez
+        serializer.save(user=user)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all().order_by('-created_at')
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]  # <--- ide is
