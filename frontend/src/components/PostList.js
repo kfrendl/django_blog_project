@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import PostForm from "./PostForm";
 
-function PostList({ token }) {
+function PostList({ token, refreshKey }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,9 +9,9 @@ function PostList({ token }) {
   const fetchPosts = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:8000/api/posts/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: token
+          ? { Authorization: `Bearer ${token}` }
+          : undefined,
       });
       setPosts(response.data);
       setLoading(false);
@@ -25,37 +24,33 @@ function PostList({ token }) {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [refreshKey]);
 
   const handlePostCreated = (newPost) => {
     setPosts([newPost, ...posts]);
   };
 
-  if (loading) return <p>Loading posts...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p className="text-center mt-4">Loading posts...</p>;
+  if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
 
   return (
-    <div>
-      
-
-      <h1>Blog Posts</h1>
+    <div className="max-w-4xl mx-auto mt-6 space-y-6">
       {posts.length === 0 ? (
-        <p>No posts available</p>
+        <p className="text-center text-gray-600">No posts available</p>
       ) : (
         posts.map((post) => (
           <div
             key={post.id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px",
-              marginBottom: "10px",
-            }}
+            className="bg-white p-6 rounded shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:scale-[1.01]"
           >
-            <h2>{post.title}</h2>
-            <p>{post.content}</p>
-            <small>Author: {post.user?.username || "Anonymous"}</small>
-            <br />
-            <small>Created at: {new Date(post.created_at).toLocaleString()}</small>
+            <h2 className="text-xl font-bold text-gray-800">{post.title}</h2>
+            <p className="mt-2 text-gray-700">{post.content}</p>
+            <div className="mt-4 text-sm text-gray-500">
+              <span>Author: {post.user?.username || "Anonymous"}</span>
+              <span className="ml-4">
+                Created at: {new Date(post.created_at).toLocaleString()}
+              </span>
+            </div>
           </div>
         ))
       )}
