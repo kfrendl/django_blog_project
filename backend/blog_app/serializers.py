@@ -13,11 +13,18 @@ class UserSerializer(serializers.ModelSerializer):
 # Post serializer
 # -----------------------------
 class PostSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)  # a poszt szerzőjét is visszaadja
+    user = UserSerializer(read_only=True)
+    is_admin = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'user', 'created_at', 'views']
+        fields = ['id', 'title', 'content', 'user', 'created_at', 'views', 'is_admin']
+
+    def get_is_admin(self, obj):
+        request = self.context.get('request', None)
+        if request and request.user.is_authenticated:
+            return request.user.is_superuser
+        return False
 
 # -----------------------------
 # Comment serializer

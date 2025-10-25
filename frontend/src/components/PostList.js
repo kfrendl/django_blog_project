@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-function PostList({ token, refreshKey }) {
+function PostList({ token, refreshKey, onPostDeleted }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,8 +26,20 @@ function PostList({ token, refreshKey }) {
     fetchPosts();
   }, [refreshKey]);
 
-  const handlePostCreated = (newPost) => {
-    setPosts([newPost, ...posts]);
+  const handleDelete = async (id) => {
+    if (!window.confirm("Biztosan törlöd a posztot?")) return;
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/posts/${id}/`, {
+        headers: token
+          ? { Authorization: `Bearer ${token}` }
+          : undefined,
+      });
+      setPosts(posts.filter((post) => post.id !== id));
+      if (onPostDeleted) onPostDeleted(id);
+    } catch (err) {
+      console.error(err);
+      alert("Hiba a poszt törlése közben");
+    }
   };
 
   if (loading) return <p className="text-center mt-4">Loading posts...</p>;
@@ -51,6 +63,25 @@ function PostList({ token, refreshKey }) {
                 Created at: {new Date(post.created_at).toLocaleString()}
               </span>
             </div>
+
+            {/* Admin gombok */}
+            {post.is_admin && (
+              <div className="mt-4 space-x-2">
+                <button
+                  onClick={() => handleDelete(post.id)}
+                  className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+                {/* Edit gomb implementálható modal/route használatával */}
+                <button
+                  onClick={() => alert("Edit funkció implementálandó")}
+                  className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  Edit
+                </button>
+              </div>
+            )}
           </div>
         ))
       )}
