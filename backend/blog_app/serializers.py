@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Post, Comment
+from .models import CustomUser, Post, Comment, Like
 
 # -----------------------------
 # User serializer
@@ -43,16 +43,27 @@ class RegisterSerializer(serializers.ModelSerializer):
 # -----------------------------
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    is_admin = serializers.SerializerMethodField(read_only=True)
-
+    # A kedvelések száma
+    likes_count = serializers.SerializerMethodField()
+    # Megmutatja, hogy a bejelentkezett felhasználó kedvelte-e a posztot
+    is_liked = serializers.SerializerMethodField()
+    
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'user', 'created_at', 'views', 'is_admin']
+        # Hozzáadva likes_count és is_liked
+        fields = ['id', 'title', 'content', 'user', 'created_at', 'likes_count', 'is_liked']
+        read_only_fields = ['user']
 
-    def get_is_admin(self, obj):
-        request = self.context.get('request', None)
+    # Metódus a kedvelések számának meghatározására
+    def get_likes_count(self, obj):
+        return obj.like_set.count()
+
+    # Metódus annak ellenőrzésére, hogy a felhasználó kedvelte-e a posztot
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
         if request and request.user.is_authenticated:
-            return request.user.is_superuser
+            # Megnézi, létezik-e Like rekord a poszt és az aktuális felhasználó között
+            return obj.like_set.filter(user=request.user).exists()
         return False
 
 # -----------------------------
@@ -73,3 +84,26 @@ class CommentSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return request.user.is_superuser
         return False
+
+class LikeSerializer(serializers.ModelSerializer):
+    # Csak a poszt ID-jét várjuk a frontendről
+    post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
+    # A user mező csak olvasható, a backend állítja be
+    user = UserSerializer(read_only=True) 
+
+    class Meta:
+        model = Like
+        fields = ['id', 'post', 'user', 'created_at']
+        # Mivel a felhasználót a nézet állítja be (ne lehessen manipulálni)
+        read_only_fields = ['user'] 
+        
+    # Validálás a UniqueTogether megszorításra (dupla like ellen)
+    def validate(self, data):
+        request = self.context.get('request')
+        post = data['post']
+        
+        # Ez a feltétel a create műveletre vonatkozik
+        if request.user.like_set.filter(post=post).exists():
+            raise serializers.ValidationError("Ezt a posztot már kedvelted.")
+            
+        return data

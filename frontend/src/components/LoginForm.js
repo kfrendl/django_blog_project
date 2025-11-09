@@ -14,7 +14,7 @@ function LoginForm({ onLogin }) {
         password,
       });
       onLogin(response.data.access)
-      
+
       setError("");
     } catch (err) {
       setError("Hibás felhasználónév vagy jelszó");
@@ -27,7 +27,7 @@ function LoginForm({ onLogin }) {
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded shadow-md w-full max-w-sm"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center">Bejelentkezés</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
         {error && (
           <p className="text-red-500 mb-4 text-center font-medium">{error}</p>
@@ -59,7 +59,7 @@ function LoginForm({ onLogin }) {
           type="submit"
           className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded transition"
         >
-          Bejelentkezés
+          Login
         </button>
       </form>
     </div>

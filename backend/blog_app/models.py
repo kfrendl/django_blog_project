@@ -21,7 +21,8 @@ class CustomUser(AbstractUser):
 class Post(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts')
+    # A felhasználóra való hivatkozáshoz (ha ugyanabban az appban van) használhatod az osztálynevet
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts') 
     created_at = models.DateTimeField(auto_now_add=True)
     views = models.IntegerField(default=0)
 
@@ -33,6 +34,7 @@ class Post(models.Model):
 # -----------------------------
 class Comment(models.Model):
     content = models.CharField(max_length=200)
+    # Hivatkozás a CustomUser-re
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='comments')
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -41,4 +43,19 @@ class Comment(models.Model):
         return f'Comment by {self.user.username} on {self.post.title}'
 
 
+# -----------------------------
+# Like modell
+# -----------------------------
+class Like(models.Model):
+    # VÁLTOZÁS: Hivatkozzunk a CustomUser-re közvetlenül az osztálynévvel, 
+    # mivel ugyanabban a models.py fájlban van definiálva.
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('user', 'post')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.user.username} likes {self.post.title[:20]}'

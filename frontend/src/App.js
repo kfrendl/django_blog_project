@@ -11,7 +11,7 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("accessToken") || null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isRegistering, setIsRegistering] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null); // ÚJ ÁLLAPOT AZ AKTUÁLIS FELHASZNÁLÓNAK
+  const [currentUser, setCurrentUser] = useState(null);
 
   // -- FELHASZNÁLÓ LEKÉRÉSE --
   const fetchCurrentUser = async (accessToken) => {
@@ -21,21 +21,19 @@ function App() {
     }
     
     try {
-      // FIGYELEM: Ehhez a végponthoz (pl. /api/user/me/) szükséges backend implementáció!
       const response = await axios.get("http://127.0.0.1:8000/api/user/me/", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setCurrentUser(response.data);
     } catch (err) {
       console.error("Failed to fetch current user:", err);
-      // Ha a token lejárt vagy érvénytelen, kijelentkeztetjük
       handleLogout(); 
     }
   };
 
   useEffect(() => {
     fetchCurrentUser(token);
-  }, [token]); // Token változásakor lekérjük a user adatokat
+  }, [token]); 
 
   // -- FUNKCIÓK --
   const handleLogin = (accessToken) => {
@@ -46,20 +44,19 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     setToken(null);
-    setCurrentUser(null); // Kijelentkezéskor töröljük a felhasználói adatokat
-    setRefreshKey(prev => prev + 1); // Frissítjük a posztlistát (eltűnnek az admin gombok)
+    setCurrentUser(null); 
+    setRefreshKey(prev => prev + 1); 
   };
 
   const handleSuccessfulRegister = () => {
+    // Siker esetén visszavált a bejelentkezésre
     setIsRegistering(false);
-    // Bejelentkezési űrlap megjelenítése a sikeres regisztráció után
   };
   
   const handlePostCreated = () => {
     setRefreshKey(prev => prev + 1);
   };
   
-  // A PostList-ből hívva: frissíti a PostList-et, ha egy poszt törölve lett
   const handlePostDeleted = () => {
     setRefreshKey(prev => prev + 1);
   };
@@ -70,7 +67,7 @@ function App() {
       <div className="max-w-4xl mx-auto px-4">
         {/* Header/Navigáció */}
         <header className="flex justify-between items-center mb-6 p-4 bg-white shadow rounded-lg">
-          <h1 className="text-3xl font-bold text-gray-800">Django Blog</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Electric Ink Blog</h1>
           {token && (
             <div className="flex items-center space-x-4">
                 {currentUser && (
@@ -93,20 +90,21 @@ function App() {
         {!token ? (
           <div className="bg-white p-6 rounded shadow-md">
             {isRegistering ? (
+              // VÁLTOZÁS: Hozzáadva az onCancel prop
               <RegisterForm 
                 onSuccessfulRegister={handleSuccessfulRegister} 
-                onBack={() => setIsRegistering(false)} 
+                onCancel={() => setIsRegistering(false)} 
               />
             ) : (
               <>
                 <LoginForm onLogin={handleLogin} />
                 <p className="mt-4 text-center">
-                  Nincs még fiókod?{" "}
+                  No account?{" "}
                   <button
                     onClick={() => setIsRegistering(true)}
                     className="text-blue-500 hover:text-blue-700"
                   >
-                    Regisztrálj!
+                    Register!
                   </button>
                 </p>
               </>
@@ -122,7 +120,7 @@ function App() {
               token={token} 
               refreshKey={refreshKey} 
               onPostDeleted={handlePostDeleted}
-              currentUser={currentUser} // ÁTADVA A PostList-nek
+              currentUser={currentUser} 
             />
           </>
         )}
