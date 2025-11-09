@@ -5,9 +5,16 @@ from .models import CustomUser, Post, Comment
 # User serializer
 # -----------------------------
 class UserSerializer(serializers.ModelSerializer):
+    is_admin = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'is_admin', 'is_active']
+        read_only_fields = ['email', 'is_admin', 'is_active']
+
+    def get_is_admin(self, obj):
+        # A legtöbb esetben az is_superuser felel meg a blog admin jogkörének.
+        return obj.is_superuser
 
 # -----------------------------
 # User Registration serializer
@@ -54,7 +61,15 @@ class PostSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
+    is_admin = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Comment
-        fields = ['id', 'content', 'user', 'post', 'created_at']
+        fields = ['id', 'content', 'user', 'post', 'created_at', 'is_admin']
+
+    # Admin jogosultság ellenőrzése (ugyanaz, mint a PostSerializer-ben)
+    def get_is_admin(self, obj):
+        request = self.context.get('request', None)
+        if request and request.user.is_authenticated:
+            return request.user.is_superuser
+        return False

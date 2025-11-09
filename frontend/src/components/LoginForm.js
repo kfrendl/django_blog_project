@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-function LoginForm({ setToken }) {
+function LoginForm({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,8 +13,8 @@ function LoginForm({ setToken }) {
         username,
         password,
       });
-      setToken(response.data.access);
-      localStorage.setItem("accessToken", response.data.access);
+      onLogin(response.data.access)
+      
       setError("");
     } catch (err) {
       setError("Hibás felhasználónév vagy jelszó");
