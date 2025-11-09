@@ -10,6 +10,28 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'is_admin', 'is_active']
 
 # -----------------------------
+# User Registration serializer
+# -----------------------------
+class RegisterSerializer(serializers.ModelSerializer):
+    # A jelszó mező csak írható, nem fog visszakerülni a válaszba
+    password = serializers.CharField(write_only=True)
+    
+    class Meta:
+        model = CustomUser
+        # A felhasználónév, e-mail és jelszó a minimális mezők a regisztrációhoz
+        fields = ['id', 'username', 'email', 'password']
+        extra_kwargs = {'password': {'write_only': True}} # Bár a CharField megadja, ez egy extra megerősítés
+
+    # Felülírjuk a create metódust a jelszó hasheléséhez
+    def create(self, validated_data):
+        user = CustomUser.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password'] # A create_user automatikusan hasheli a jelszót
+        )
+        return user
+
+# -----------------------------
 # Post serializer
 # -----------------------------
 class PostSerializer(serializers.ModelSerializer):

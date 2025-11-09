@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import PostViewSet, CommentViewSet
+from .views import PostViewSet, CommentViewSet, RegisterView
 
 # Router létrehozása
 router = DefaultRouter()
@@ -10,4 +10,7 @@ router.register(r'comments', CommentViewSet, basename='comment')
 # URL-ek
 urlpatterns = [
     path('', include(router.urls)),
+
+    # Regisztracios vegpont
+    path('register/', RegisterView.as_view(), name='auth_register'),
 ]

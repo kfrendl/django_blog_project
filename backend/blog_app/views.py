@@ -1,6 +1,6 @@
-from rest_framework import viewsets, permissions
-from .models import Post, Comment
-from .serializers import PostSerializer, CommentSerializer
+from rest_framework import viewsets, permissions, generics  
+from .models import Post, Comment, CustomUser
+from .serializers import PostSerializer, CommentSerializer, RegisterSerializer
 
 # Csak a poszt tulajdonosa vagy admin tudja szerkeszteni / törölni
 class IsOwnerOrAdmin(permissions.BasePermission):
@@ -22,6 +22,13 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Most már a bejelentkezett user lesz a tulajdonos
         serializer.save(user=self.request.user)
+
+class RegisterView(generics.CreateAPIView):
+    queryset = CustomUser.objects.all()
+    # A serializer a RegisterSerializer, ami a create_user-t hívja
+    serializer_class = RegisterSerializer
+    # Mindenki regisztrálhat, még ha nincs is bejelentkezve
+    permission_classes = [permissions.AllowAny]
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all().order_by('-created_at')

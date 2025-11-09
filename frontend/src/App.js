@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import LoginForm from "./components/LoginForm";
 import PostForm from "./components/PostForm";
 import PostList from "./components/PostList";
+import RegisterForm from "./components/RegisterForm"; // ÚJ IMPORT
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("accessToken") || null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isRegistering, setIsRegistering] = useState(false); // ÚJ ÁLLAPOT
 
   // Új poszt létrehozása után frissítés
   const handlePostCreated = () => {
@@ -16,6 +18,11 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     setToken(null);
+  };
+  
+  // Regisztráció után automatikusan átvált a bejelentkezési nézetre
+  const handleSuccessfulRegister = () => {
+    setIsRegistering(false);
   };
 
   return (
@@ -35,8 +42,40 @@ function App() {
         </header>
 
         {!token ? (
-          <LoginForm setToken={setToken} />
+          // Regisztráció/Bejelentkezés nézet
+          <>
+            {isRegistering ? (
+              // Regisztrációs űrlap
+              <>
+                <RegisterForm onSuccessfulRegister={handleSuccessfulRegister} />
+                <p className="text-center mt-4">
+                  Már van fiókod?{" "}
+                  <button 
+                    onClick={() => setIsRegistering(false)} 
+                    className="text-blue-500 hover:text-blue-700 font-medium transition"
+                  >
+                    Jelentkezz be
+                  </button>
+                </p>
+              </>
+            ) : (
+              // Bejelentkezési űrlap
+              <>
+                <LoginForm setToken={setToken} />
+                <p className="text-center mt-4">
+                  Nincs még fiókod?{" "}
+                  <button 
+                    onClick={() => setIsRegistering(true)} 
+                    className="text-blue-500 hover:text-blue-700 font-medium transition"
+                  >
+                    Regisztrálj
+                  </button>
+                </p>
+              </>
+            )}
+          </>
         ) : (
+          // Bejelentkezett felhasználó nézete
           <>
             {/* Poszt létrehozása */}
             <PostForm token={token} onPostCreated={handlePostCreated} />
