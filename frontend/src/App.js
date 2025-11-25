@@ -1,5 +1,3 @@
-// frontend/src/App.js
-
 import React, { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
 import PostForm from "./components/PostForm";
@@ -86,11 +84,10 @@ function App() {
           )}
         </header>
 
-        {/* Regisztráció/Login szekció */}
+        {/*Regisztráció/Login szekció */}
         {!token ? (
           <div className="bg-white p-6 rounded shadow-md">
             {isRegistering ? (
-              // VÁLTOZÁS: Hozzáadva az onCancel prop
               <RegisterForm 
                 onSuccessfulRegister={handleSuccessfulRegister} 
                 onCancel={() => setIsRegistering(false)} 

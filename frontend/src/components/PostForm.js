@@ -24,7 +24,7 @@ function PostForm({ token, onPostCreated }) {
       setContent("");
 
       if (onPostCreated) {
-        onPostCreated(response.data); // értesíti a szülőt az új posztról
+        onPostCreated(response.data); // noveljuk a refreshKey-t,, ami ujratolti a PostList-et
       }
     } catch (err) {
       setMessage("Hiba a poszt létrehozásánál");

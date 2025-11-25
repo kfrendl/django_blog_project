@@ -1,5 +1,3 @@
-// frontend/src/components/PostList.js
-
 import React, { useEffect, useState, useCallback } from "react"; 
 import axios from "axios";
 import EditPostModal from "./EditPostModal";
@@ -72,9 +70,8 @@ function PostList({ token, refreshKey, onPostDeleted, currentUser }) {
   }, [refreshKey, fetchData]);
 
 
-  // JAVÍTOTT Like/Unlike kezelése
   const handleLikeToggle = async (postId, isCurrentlyLiked) => {
-    // Ellenőrizzük, hogy van token és van betöltött user.
+    // Ellenőrizzük, hogy van token és van betöltött user
     if (!token || !currentUser) {
         alert("A kedveléshez be kell jelentkezned!");
         return;
@@ -96,7 +93,7 @@ function PostList({ token, refreshKey, onPostDeleted, currentUser }) {
                 });
             } else {
                  console.warn("Unlike failed: Like ID not found, refreshing data.");
-                 // Ha nincs ID, frissítjük az oldalt, hátha szinkronizációs hiba volt.
+                 
             }
         } else {
             // LIKE (Kedvelés)
@@ -176,7 +173,7 @@ function PostList({ token, refreshKey, onPostDeleted, currentUser }) {
             .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
             
           const isCommentsOpen = openComments[post.id]; 
-          // Hozzáadjuk a poszt tulajdonosának ellenőrzését a kényelmesebb jogosultsághoz:
+          
           const isPostOwner = currentUser && post.user && post.user.id === currentUser.id;
 
           return (
@@ -218,7 +215,7 @@ function PostList({ token, refreshKey, onPostDeleted, currentUser }) {
                       </span>
                   </div>
 
-                  {/* ADMIN JOGOSULTSÁG GOMBOK (JAVÍTVA) */}
+                  {/* ADMIN JOGOSULTSÁG GOMBOK */}
                   {currentUser && (currentUser.is_admin || isPostOwner) && (
                       <div className="space-x-2">
                           <button

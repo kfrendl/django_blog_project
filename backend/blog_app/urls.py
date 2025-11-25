@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import PostViewSet, CommentViewSet, RegisterView, CurrentUserView, LikeViewSet
 
 # Router létrehozása
+# Automatikusan letrehozza a CRUD url-eket a ViewSet-ekhez
 router = DefaultRouter()
 router.register(r'posts', PostViewSet, basename='post')
 router.register(r'comments', CommentViewSet, basename='comment')
