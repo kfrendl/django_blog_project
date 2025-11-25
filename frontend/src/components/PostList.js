@@ -71,7 +71,6 @@ function PostList({ token, refreshKey, onPostDeleted, currentUser }) {
 
 
   const handleLikeToggle = async (postId, isCurrentlyLiked) => {
-    // Ellenőrizzük, hogy van token és van betöltött user
     if (!token || !currentUser) {
         alert("A kedveléshez be kell jelentkezned!");
         return;

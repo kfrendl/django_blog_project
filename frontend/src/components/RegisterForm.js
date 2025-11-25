@@ -1,9 +1,6 @@
-// frontend/src/components/RegisterForm.js
-
 import { useState } from "react";
 import axios from "axios";
 
-// VÁLTOZÁS: Hozzáadva az onCancel prop
 function RegisterForm({ onSuccessfulRegister, onCancel }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
