@@ -78,7 +78,7 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['id', 'content', 'user', 'post', 'created_at', 'is_admin']
 
-    # Admin jogosultság ellenőrzése (ugyanaz, mint a PostSerializer-ben)
+    # Admin jogosultság ellenőrzése
     def get_is_admin(self, obj):
         request = self.context.get('request', None)
         if request and request.user.is_authenticated:
