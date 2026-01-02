@@ -202,7 +202,7 @@ function PostList({ token, refreshKey, onPostDeleted, currentUser }) {
                                           ${post.is_liked ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                           >
                               <span className="text-base">👍</span>
-                              <span>{post.is_liked ? 'Kedvelve' : 'Kedvelés'}</span>
+                              <span>{post.is_liked ? 'Liked' : 'Like'}</span>
                           </button>
                       ) : (
                           <span className="text-gray-500 text-sm">Jelentkezz be a kedveléshez</span>
@@ -210,7 +210,7 @@ function PostList({ token, refreshKey, onPostDeleted, currentUser }) {
                       
                       {/* LIKE SZÁM */}
                       <span className="text-gray-600 text-sm font-medium">
-                          {post.likes_count} {post.likes_count === 1 ? 'kedvelés' : 'kedvelés'}
+                          {post.likes_count} {post.likes_count === 1 ? 'Like(s)' : 'Like(s)'}
                       </span>
                   </div>
 
@@ -239,7 +239,7 @@ function PostList({ token, refreshKey, onPostDeleted, currentUser }) {
                 onClick={() => toggleComments(post.id)}
                 className="mt-4 w-full text-left font-medium text-blue-600 hover:text-blue-800 py-2 border-t border-b flex justify-between items-center"
               >
-                <span>Hozzászólások ({postComments.length})</span>
+                <span>Comments ({postComments.length})</span>
                 <span className={`transform transition-transform duration-300 ${isCommentsOpen ? 'rotate-90' : 'rotate-0'}`}>
                   {'>'}
                 </span>
@@ -271,7 +271,7 @@ function PostList({ token, refreshKey, onPostDeleted, currentUser }) {
                                             onClick={() => handleCommentDelete(comment.id)}
                                             className="text-xs text-red-500 hover:text-red-700 ml-4"
                                         >
-                                            Törlés
+                                            Delete
                                         </button>
                                     )}
                                 </p>

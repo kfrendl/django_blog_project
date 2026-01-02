@@ -84,7 +84,7 @@ function App() {
           )}
         </header>
 
-        {/*Regisztráció/Login szekció */}
+        {/* Regisztráció/Login szekció */}
         {!token ? (
           <div className="bg-white p-6 rounded shadow-md">
             {isRegistering ? (

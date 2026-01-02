@@ -21,7 +21,6 @@ class CustomUser(AbstractUser):
 class Post(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
-    # A felhasználóra való hivatkozáshoz (ha ugyanabban az appban van) használhatod az osztálynevet
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts') 
     created_at = models.DateTimeField(auto_now_add=True)
     views = models.IntegerField(default=0)
@@ -47,8 +46,6 @@ class Comment(models.Model):
 # Like modell
 # -----------------------------
 class Like(models.Model):
-    # VÁLTOZÁS: Hivatkozzunk a CustomUser-re közvetlenül az osztálynévvel, 
-    # mivel ugyanabban a models.py fájlban van definiálva.
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
