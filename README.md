@@ -60,11 +60,11 @@ This is a modern, full-featured blog application built with Django (Backend) and
 #### Comments
 
 <p align="center">
-<img src=".\documentation\screenshots\post_comments_1.png" alt="Posts2" width="60%">
+<img src=".\documentation\screenshots\post_comments_1.png" alt="Comments1" width="60%">
 </p>
 
 <p align="center">
-<img src=".\documentation\screenshots\post_comments_2.png" alt="Posts2" width="60%">
+<img src=".\documentation\screenshots\post_comments_2.png" alt="Comments2" width="60%">
 </p>
 
 <p align="center">
@@ -74,17 +74,26 @@ This is a modern, full-featured blog application built with Django (Backend) and
 #### Admin View
 
 <p align="center">
-<img src=".\documentation\screenshots\admin_view_posts.png" alt="Posts2" width="60%">
+<img src=".\documentation\screenshots\admin_view_posts.png" alt="Admin Post View" width="60%">
 </p>
 
 <p align="center">
-<img src=".\documentation\screenshots\admin_view_comments.png" alt="Posts2" width="60%">
+<img src=".\documentation\screenshots\admin_view_comments.png" alt="Admin Comment View" width="60%">
 </p>
 
 <p align="center">
   <em>This section represents that if we are sigend in as "admin", we can delete every post or comment regardless of who created it.</em>
 </p>
 
+#### Mobile View
+
+<p align="center">
+<img src=".\documentation\screenshots\mobile_view.png" alt="Mobile View" width="20%">
+</p>
+
+<p align="center">
+  <em>This section represents how the application looks like on mobile.</em>
+</p>
 
 ### Django Administration
 
